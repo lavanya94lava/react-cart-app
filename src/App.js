@@ -1,6 +1,7 @@
 import React from 'react';
 import Cart from './Cart';
 import Navbar from './Navbar';
+import * as firebase from 'firebase'; 
 
 class App extends React.Component {
   constructor(){
@@ -31,6 +32,23 @@ class App extends React.Component {
         ]
     } 
   }
+
+  componentDidMount(){
+    firebase
+        .firestore()
+        .collection('products')
+        .get()
+        .then((snapshot)=>{
+          console.log("snapshot", snapshot);
+
+          snapshot.docs.map((doc)=>{
+            console.log(doc.data());
+          });
+
+          
+        })
+  }
+
   handleDecreaseQuantity = (product) =>{
       console.log("please decrease the qty",product);
       const {products} = this.state;
@@ -97,7 +115,7 @@ class App extends React.Component {
         onDecreaseQuantity = {this.handleDecreaseQuantity}
         onDeleteProduct = {this.handleDeleteProduct}
       />
-      <div>TOTAL:{this.getCartTotal()}</div>
+      <div style = {{padding:10, fontSize:20}}>TOTAL:{this.getCartTotal()}</div>
       </div>
     );
   }
